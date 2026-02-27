@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 
 export default function FacialExpression() {
   const videoRef = useRef();
+  const [Mood, setMood] = useState();
   const canvasRef = useRef();
 
    useEffect(() => {
@@ -34,14 +35,15 @@ export default function FacialExpression() {
         };
         const expressionName = detections[0]?.expressions.asSortedArray()[0]?.expression || 'No face detected';
         console.log(expressionName);
+        setMood(expressionName);
     };
 
     
 
 
   return (
-    <div className='flex items-end justify-center gap-5'>
-      <div className='rounded-xl overflow-hidden w-[300px] h-[200px] ' style={{ position: 'relative' }}>
+    <div className='flex items-center justify-center gap-5 mb-6'>
+      <div className='rounded-xl overflow-hidden w-[400px] h-[200px] ' style={{ position: 'relative' }}>
       <video
         ref={videoRef}
         className='w-full h-full object-cover'
@@ -53,8 +55,12 @@ export default function FacialExpression() {
       
     </div>
       <div>
-        <button onClick={handleVideoPlay} className='px-4 active:scale-100 hover:scale-95 transition-all py-4 rounded-xl bg-blue-600 text-white'>Start Mood Detection</button>
+        <div>
+        <h1 className="text-xl font-bold">{!Mood ? 'click to detect the mood ' : `Mood: ${Mood}`}</h1>
       </div>
+        <button onClick={handleVideoPlay} className='px-4 cursor-pointer active:scale-100 hover:scale-95 transition-all py-2 rounded-xl bg-blue-600 text-white'>Start Mood Detection</button>
+      </div>
+      
     </div>
     
   );
