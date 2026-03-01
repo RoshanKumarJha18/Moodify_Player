@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
+import axios from 'axios';
 
-export default function FacialExpression() {
+export default function FacialExpression({SetSong}) {
   const videoRef = useRef();
   const [Mood, setMood] = useState();
   const canvasRef = useRef();
@@ -36,10 +37,17 @@ export default function FacialExpression() {
         const expressionName = detections[0]?.expressions.asSortedArray()[0]?.expression || 'No face detected';
         console.log(expressionName);
         setMood(expressionName);
+        await axios.get(`http://localhost:3000/song?mood=${expressionName}`)
+          .then((response) => {
+            console.log(response.data);
+            SetSong(response.data.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching songs:", error);
+          });
     };
 
     
-
 
   return (
     <div className='flex items-center justify-center gap-5 mb-6'>
